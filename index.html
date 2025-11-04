@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatórios Educacionais por Estado</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --primary: #2f4f90;
+      --primary-light: #a5b8e1;
+      --accent: #f0b429;
+      --text: #24324a;
+      --muted: #6b7a99;
+  --card-bg: #ffffff;
+  --shadow: 0 15px 35px rgba(36, 50, 74, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      position: relative;
+      text-align: center;
+      padding: 4rem 1.5rem 3rem;
+      background: linear-gradient(140deg, rgba(47, 79, 144, 0.12), rgba(240, 180, 41, 0.12));
+    }
+    .brand-mark {
+      position: absolute;
+  top: 1.5rem;
+      left: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: clamp(120px, 22vw, 220px);
+      padding: clamp(0.35rem, 1.4vw, 0.85rem) clamp(0.5rem, 1.8vw, 1rem);
+      background: rgba(255, 255, 255, 0.86);
+      border-radius: 14px;
+      box-shadow: 0 12px 25px rgba(47, 79, 144, 0.12);
+    }
+
+    .brand-mark img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    @media (max-width: 640px) {
+      .brand-mark {
+        position: static;
+        margin: 0 auto 1.75rem;
+        width: clamp(140px, 48vw, 240px);
+        background: rgba(255, 255, 255, 0.94);
+      }
+    }
+
+    h1 {
+      margin: 0 0 1rem;
+      font-weight: 600;
+      color: var(--primary);
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: 0.04em;
+    }
+
+    header p {
+      margin: 0;
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 38rem;
+      margin-inline: auto;
+    }
+
+    main {
+      width: min(1100px, 92vw);
+      margin: 0 auto;
+      flex: 1 0 auto;
+      padding-bottom: 3rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 1.2rem;
+      margin-top: 2.5rem;
+    }
+
+    .state-card {
+      position: relative;
+      border: none;
+      border-radius: 16px;
+      padding: 2.5rem 0;
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: var(--card-bg);
+      color: var(--primary);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      --hover-lift: 0px;
+      --column-shift: 0px;
+      transform: translateY(calc(var(--hover-lift) + var(--column-shift)));
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      outline: none;
+    }
+
+    .state-card:hover,
+    .state-card:focus-visible {
+      --hover-lift: -6px;
+      box-shadow: 0 20px 40px rgba(47, 79, 144, 0.18);
+    }
+
+    .state-card:focus-visible {
+      box-shadow: 0 0 0 4px rgba(47, 79, 144, 0.25);
+    }
+
+    .state-card:active {
+      --hover-lift: -3px;
+    }
+
+    .state-card::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: -2.8rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      background: var(--primary);
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 400;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      box-shadow: 0 10px 20px rgba(36, 50, 74, 0.25);
+    }
+
+    .state-card:hover::after,
+    .state-card:focus-visible::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    footer {
+      background: #1e2738;
+      color: rgba(255, 255, 255, 0.84);
+      padding: 1.5rem;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .footer-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.9rem;
+      text-align: center;
+    }
+
+    .footer-supporters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      color: rgba(255, 255, 255, 0.74);
+      font-weight: 400;
+    }
+
+    .footer-supporters span {
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .supporter-logos {
+      display: inline-flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .supporter-logos img {
+      height: auto;
+      max-height: clamp(28px, 5vw, 72px);
+      max-width: clamp(110px, 22vw, 220px);
+      width: auto;
+      display: block;
+      filter: brightness(0) invert(1) saturate(0.85);
+      object-fit: contain;
+    }
+
+    .supporter-logos img[data-color="true"] {
+      filter: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .footer-supporters span {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand-mark">
+      <img src="images/cshf-logo.png" alt="Logotipo Cátedra Sérgio Henrique Ferreira" loading="lazy">
+    </div>
+    <h1>Relatórios Educacionais por Estado</h1>
+    <p>Selecione um estado ou o Distrito Federal para acessar o download do relatório correspondente.</p>
+  </header>
+
+  <main>
+    <section class="grid" id="statesGrid" aria-label="Estados brasileiros"></section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p>Projeto Brasil Educacional — 2025 · Desenvolvido pela Cátedra Sérgio Henrique Ferreira</p>
+      <div class="footer-supporters" aria-label="Apoiadores do projeto">
+        <span>Apoiado por:</span>
+        <div class="supporter-logos">
+          <!-- Substitua pelos logotipos reais dos apoiadores -->
+          <img src="images/b3-logo.png" alt="B3 Social" loading="lazy">
+          <img src="images/santander-logo.png" alt="Santander" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mapeie cada estado para seu link direto do Google Drive (formato uc?export=download&id=).
+    const stateReports = [
+      { acronym: 'AC', name: 'Acre', url: 'https://docs.google.com/presentation/d/1wK6IC3FIzg_njSN--u1GwockjEyuCTGr/edit?usp=drive_link&ouid=110143270963063787854&rtpof=true&sd=true' },
+      { acronym: 'AL', name: 'Alagoas', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_AL' },
+      { acronym: 'AP', name: 'Amapá', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_AP' },
+      { acronym: 'AM', name: 'Amazonas', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_AM' },
+      { acronym: 'BA', name: 'Bahia', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_BA' },
+      { acronym: 'CE', name: 'Ceará', url: 'https://docs.google.com/presentation/d/1w4eSLzAMzTxX6fC7yai8ynAntx1ujkGK/edit?usp=drive_link&ouid=110143270963063787854&rtpof=true&sd=true' },
+      { acronym: 'DF', name: 'Distrito Federal', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_DF' },
+      { acronym: 'ES', name: 'Espírito Santo', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_ES' },
+      { acronym: 'GO', name: 'Goiás', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_GO' },
+      { acronym: 'MA', name: 'Maranhão', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_MA' },
+      { acronym: 'MT', name: 'Mato Grosso', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_MT' },
+      { acronym: 'MS', name: 'Mato Grosso do Sul', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_MS' },
+      { acronym: 'MG', name: 'Minas Gerais', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_MG' },
+      { acronym: 'PA', name: 'Pará', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_PA' },
+      { acronym: 'PB', name: 'Paraíba', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_PB' },
+      { acronym: 'PR', name: 'Paraná', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_PR' },
+      { acronym: 'PE', name: 'Pernambuco', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_PE' },
+      { acronym: 'PI', name: 'Piauí', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_PI' },
+      { acronym: 'RJ', name: 'Rio de Janeiro', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_RJ' },
+      { acronym: 'RN', name: 'Rio Grande do Norte', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_RN' },
+      { acronym: 'RS', name: 'Rio Grande do Sul', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_RS' },
+      { acronym: 'RO', name: 'Rondônia', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_RO' },
+      { acronym: 'RR', name: 'Roraima', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_RR' },
+      { acronym: 'SC', name: 'Santa Catarina', url: 'https://docs.google.com/presentation/d/1-m6A-H5AamiW20gZgewTl4b2Vm8UKqw5/edit?usp=drive_link&ouid=110143270963063787854&rtpof=true&sd=true' },
+      { acronym: 'SP', name: 'São Paulo', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_SP' },
+      { acronym: 'SE', name: 'Sergipe', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_SE' },
+      { acronym: 'TO', name: 'Tocantins', url: 'https://drive.google.com/uc?export=download&id=ARQUIVO_TO' }
+    ];
+
+    const grid = document.getElementById('statesGrid');
+    const SHIFT_DISTANCE = '2.8rem';
+    const wideTooltipStates = new Set(['MT', 'MS', 'RN', 'DF', 'RS']);
+
+    // Ajusta o deslocamento da coluna (e vizinhos, quando necessário) para manter o tooltip visível.
+    const toggleColumnShift = (originCard, activate) => {
+      const originLeft = originCard.offsetLeft;
+      const originTop = originCard.offsetTop;
+      const originWidth = originCard.offsetWidth;
+      const expandNeighbors = wideTooltipStates.has(originCard.dataset.acronym);
+      const gapValue = (() => {
+        const parsed = parseFloat(getComputedStyle(grid).columnGap);
+        return Number.isNaN(parsed) ? 0 : parsed;
+      })();
+      const neighborThreshold = originWidth + gapValue + 2;
+
+      grid.querySelectorAll('.state-card').forEach((card) => {
+        if (card === originCard) return;
+        const belowOrigin = card.offsetTop > originTop;
+
+        if (!belowOrigin) {
+          if (!activate) {
+            card.style.setProperty('--column-shift', '0px');
+          }
+          return;
+        }
+
+        const leftDiff = Math.abs(card.offsetLeft - originLeft);
+        const sameColumn = leftDiff < 2;
+        const neighborColumn = expandNeighbors && leftDiff <= neighborThreshold;
+
+        if (sameColumn || neighborColumn) {
+          card.style.setProperty('--column-shift', activate ? SHIFT_DISTANCE : '0px');
+        } else if (!activate) {
+          card.style.setProperty('--column-shift', '0px');
+        }
+      });
+    };
+
+    // Renderiza cada cartão de estado na grade, mantendo o código fácil de atualizar.
+    stateReports.forEach((state) => {
+      const card = document.createElement('button');
+      card.className = 'state-card';
+      card.type = 'button';
+      card.textContent = state.acronym;
+      card.dataset.tooltip = state.name;
+      card.dataset.acronym = state.acronym;
+
+      card.addEventListener('click', () => {
+        window.open(state.url, '_blank', 'noopener');
+      });
+
+      card.addEventListener('mouseenter', () => toggleColumnShift(card, true));
+      card.addEventListener('mouseleave', () => toggleColumnShift(card, false));
+      card.addEventListener('focus', () => toggleColumnShift(card, true));
+      card.addEventListener('blur', () => toggleColumnShift(card, false));
+
+      grid.appendChild(card);
+    });
+
+    window.addEventListener('resize', () => {
+      grid.querySelectorAll('.state-card').forEach((card) => {
+        card.style.setProperty('--column-shift', '0px');
+      });
+    });
+
+  </script>
+</body>
+</html>
